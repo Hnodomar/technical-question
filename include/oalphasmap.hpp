@@ -169,6 +169,12 @@ public:
     }
   }
 
+  void swap(OALPHashMap& swap_from) {
+    std::swap(buckets_, swap_from.buckets_);
+    std::swap(map_size_, swap_from.map_size_);
+    std::swap(empty_key_, swap_from.empty_key_);
+  }
+
 private:
 
   struct Hash {
@@ -183,12 +189,6 @@ private:
   };
 
   Hash hash_func_;
-
-  void swap(OALPHashMap& swap_from) {
-    std::swap(buckets_, swap_from.buckets_);
-    std::swap(map_size_, swap_from.map_size_);
-    std::swap(empty_key_, swap_from.empty_key_);
-  }
 
   bool hashIsEarlier(std::size_t erase_index, std::size_t probe_index, Key probe_key) {
     std::size_t hash_index = getHashIndex(probe_key);
@@ -207,7 +207,7 @@ private:
   
   std::vector<std::pair<Key, Value>> buckets_;
   Key empty_key_ = 0;
-  std::size_t map_size_;
+  std::size_t map_size_ = 0;
 };
 
 }

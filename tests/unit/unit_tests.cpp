@@ -5,11 +5,14 @@
 #include "parser.hpp"
 #include "csvreader.hpp"
 
+namespace df = datafeed;
+
 TEST_CASE("Data Feed Basic Functionality") {
 
   CSVReader csv_reader("../../../tests/unit/dummydata.csv");
 
-  datafeed::BookHandler book_handler;
+  using BookHandler = df::BookHandler<df::FlatQueueMap>;
+  BookHandler book_handler;
 
   datafeed::parsing::CSVParser csv_parser(book_handler);
 
@@ -70,7 +73,8 @@ TEST_CASE("Data Feed Tests Whole CSV") {
 
   CSVReader csv_reader("../../../tests/unit/tickdata.csv");
 
-  datafeed::BookHandler book_handler;
+  using BookHandler = df::BookHandler<df::FlatQueueMap>;
+  BookHandler book_handler;
 
   datafeed::parsing::CSVParser csv_parser(book_handler);
 
@@ -80,9 +84,24 @@ TEST_CASE("Data Feed Tests Whole CSV") {
 
   SECTION("Top of Book Correctness") {
     const auto best_prices = book_handler.getTopOfBook();
+
+    REQUIRE(best_prices[0].price == 808);
+    REQUIRE(best_prices[0].depth == 655360);
+
+    REQUIRE(best_prices[1].price == 807);
+    REQUIRE(best_prices[1].depth == 720896);
+
+    REQUIRE(best_prices[2].price == 806);
+    REQUIRE(best_prices[2].depth == 1507328);
+
+    REQUIRE(best_prices[3].price == 805);
+    REQUIRE(best_prices[3].depth == 1179648);
+
   }
 
   SECTION("Queue Position Correctness") {
-    const auto position = book_handler.getQueuePosition(1);
+    const auto position = book_handler.getQueuePosition(7427602921438737869);
+    REQUIRE(position == 13905222);
   }
+  
 }

@@ -6,8 +6,6 @@
 #include <cstdlib>
 #include <string>
 
-#include "bookhandler.hpp"
-
 namespace datafeed {
 namespace parsing {
 
@@ -16,14 +14,13 @@ constexpr uint8_t MESSAGE_TYPE_OFFSET = 20;
 constexpr uint8_t MESSAGE_PRICE_OFFSET = MESSAGE_TYPE_OFFSET + 2;
 
 // for why I use strtol, please see: https://tinodidriksen.com/2010/02/cpp-convert-string-to-int-speed/
-
+template<typename BookHandler>
 class CSVParser {
 public:
 
   CSVParser(BookHandler& handler) : handler_(handler) {}
 
   void parseMessage(const uint8_t*& msg) {
-
     const uint64_t timestamp = parseCSVLong(msg);
 
     const uint8_t message_type = msg[0];
