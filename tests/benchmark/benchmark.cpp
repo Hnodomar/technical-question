@@ -72,7 +72,7 @@ static void executeOrder(benchmark::State& state) {
 
 }
 
-static void bestPrices(benchmark::State& state) {
+static void bestPricesFlatMap(benchmark::State& state) {
   datafeed::BookHandler<datafeed::FlatQueueMap> book_handler;
   setupBook(book_handler);
   for (auto _ : state) {
@@ -81,8 +81,26 @@ static void bestPrices(benchmark::State& state) {
   book_handler.clear();
 }
 
-static void queuePosition(benchmark::State& state) {
+static void queuePositionFlatMap(benchmark::State& state) {
   datafeed::BookHandler<datafeed::FlatQueueMap> book_handler;
+  setupBook(book_handler);
+  for (auto _ : state) {
+    const auto position = book_handler.getQueuePosition(7427602921438737869);
+  }
+  book_handler.clear();
+}
+
+static void bestPricesRBTree(benchmark::State& state) {
+  datafeed::BookHandler<datafeed::RBTreeQueueMap> book_handler;
+  setupBook(book_handler);
+  for (auto _ : state) {
+    const auto best_prices = book_handler.getTopOfBook();
+  }
+  book_handler.clear();
+}
+
+static void queuePositionRBTree(benchmark::State& state) {
+  datafeed::BookHandler<datafeed::RBTreeQueueMap> book_handler;
   setupBook(book_handler);
   for (auto _ : state) {
     const auto position = book_handler.getQueuePosition(7427602921438737869);
@@ -94,7 +112,9 @@ BENCHMARK(parseWholeCSVFlatMap);
 BENCHMARK(parseWholeCSVRBTree);
 BENCHMARK(addOrder)->Iterations(25000);
 BENCHMARK(deleteOrder)->Iterations(25000);
-BENCHMARK(bestPrices);
-BENCHMARK(queuePosition);
+BENCHMARK(bestPricesFlatMap);
+BENCHMARK(bestPricesRBTree);
+BENCHMARK(queuePositionFlatMap);
+BENCHMARK(queuePositionRBTree);
 
 BENCHMARK_MAIN();

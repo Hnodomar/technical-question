@@ -30,7 +30,11 @@ cd benchmark
 
 ## Benchmarks
 
-Below are some early benchmark numbers. I think the absolute values of these benchmarks are less important than the values relative to one another: the flat map implementation provides a ~15% speed-up, whereas finding an order's queue position is quite slow relative to other operations, due to the O(N) search of a linked-list - a lot of cache misses.
+Below are the results of some rough benchmarking that I did, with suprising results.
+
+I expected the flat map to provide a noticable speed-up relative to the RB-tree of the STL. Instead, they're similar. Needs investigation.
+
+The flat map is expectedly faster in retrieving queue positions, since this requires iterating through the map.
 
 <p align="center">
   <img src="https://github.com/Hnodomar/technical-question/blob/main/description/benchmarks.jpg" alt="Benchmarks"/>
